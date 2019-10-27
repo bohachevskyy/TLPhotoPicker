@@ -16,20 +16,28 @@ class ViewController: UIViewController,TLPhotosPickerViewControllerDelegate {
     @IBOutlet var label: UILabel!
     @IBOutlet var imageView: UIImageView!
     
-    @IBAction func pickerButtonTap() {
-        let viewController = CustomPhotoPickerViewController()
-        viewController.delegate = self
-        viewController.didExceedMaximumNumberOfSelection = { [weak self] (picker) in
-            self?.showExceededMaximumAlert(vc: picker)
-        }
-        var configure = TLPhotosPickerConfigure()
-        configure.numberOfColumn = 3
-        viewController.configure = configure
-        viewController.selectedAssets = self.selectedAssets
-        viewController.logDelegate = self
+        @IBAction func pickerButtonTap() {
+            let viewController = CustomPhotoPickerViewController()
+            viewController.delegate = self
+            viewController.didExceedMaximumNumberOfSelection = { [weak self] (picker) in
+                self?.showExceededMaximumAlert(vc: picker)
+            }
+            var configure = TLPhotosPickerConfigure()
+            let options = PHFetchOptions()
+            let sortOrder = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            options.sortDescriptors = sortOrder
+            configure.fetchOption = options
+            configure.allowedVideo = true
+            configure.numberOfColumn = 3
+            configure.allowedLivePhotos = false
+            configure.usedCameraButton = false
+            configure.usedPrefetch = true
 
-        self.present(viewController, animated: true, completion: nil)
-    }
+            viewController.configure = configure
+            viewController.logDelegate = self
+
+            self.present(viewController, animated: true, completion: nil)
+        }
     
     @IBAction func pickerWithCustomCameraCell() {
         let viewController = CustomPhotoPickerViewController()

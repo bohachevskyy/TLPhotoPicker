@@ -397,11 +397,11 @@ extension TLPhotosPickerViewController {
             queueForGroupedBy.async { [weak self] in
                 self?.focusedCollection?.reloadSection(groupedBy: groupedBy)
                 DispatchQueue.main.async {
-                    self?.collectionView.reloadData()
+                    self?.collectionView.scrollToLast()
                 }
             }
         }else {
-            self.collectionView.reloadData()
+            self.collectionView.scrollToLast()
         }
     }
     
@@ -1018,7 +1018,7 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             }
         }
     }
-    
+
     open func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         if self.usedPrefetch {
             for indexPath in indexPaths {
@@ -1040,7 +1040,7 @@ extension TLPhotosPickerViewController: UICollectionViewDelegate,UICollectionVie
             }
         }
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? TLPhotoCollectionViewCell else {
             return
@@ -1150,5 +1150,25 @@ extension UIImage {
         }
         UIGraphicsEndImageContext()
         return result ?? self
+    }
+}
+
+extension UICollectionView {
+    func scrollToLast() {
+        UIView.performWithoutAnimation {
+            reloadData()
+            guard numberOfSections > 0 else {
+                return
+            }
+            
+            let lastSection = numberOfSections - 1
+            
+            guard numberOfItems(inSection: lastSection) > 0 else {
+                return
+            }
+            let lastItemIndexPath = IndexPath(item: numberOfItems(inSection: lastSection) - 1,
+                                              section: lastSection)
+            self.scrollToItem(at: lastItemIndexPath, at: .bottom, animated: false)
+        }
     }
 }
