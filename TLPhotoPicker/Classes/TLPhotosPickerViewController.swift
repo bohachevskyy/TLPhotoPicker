@@ -120,6 +120,22 @@ public struct Platform {
 
 
 open class TLPhotosPickerViewController: UIViewController {
+    @objc open func getSharekeyPickerVC(withPHAssets: (([PHAsset]) -> Void)? = nil, didCancel: (() -> Void)? = nil) -> TLPhotosPickerViewController {
+        let viewController = TLPhotosPickerViewController(withPHAssets: withPHAssets, didCancel: didCancel)
+        var configure = TLPhotosPickerConfigure()
+        let options = PHFetchOptions()
+        let sortOrder = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        options.sortDescriptors = sortOrder
+        configure.fetchOption = options
+        configure.allowedVideo = true
+        configure.numberOfColumn = 3
+        configure.allowedLivePhotos = false
+        configure.usedCameraButton = false
+        configure.usedPrefetch = true
+        viewController.configure = configure
+        return viewController
+    }
+    
     @IBOutlet open var navigationBar: UINavigationBar!
     @IBOutlet open var titleView: UIView!
     @IBOutlet open var titleLabel: UILabel!
