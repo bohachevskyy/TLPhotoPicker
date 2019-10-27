@@ -120,7 +120,7 @@ public struct Platform {
 
 
 open class TLPhotosPickerViewController: UIViewController {
-    @objc open func getSharekeyPickerVC(withPHAssets: (([PHAsset]) -> Void)? = nil, didCancel: (() -> Void)? = nil) -> TLPhotosPickerViewController {
+    @objc class open func getSharekeyPickerVC(withPHAssets: (([PHAsset]) -> Void)? = nil, didCancel: (() -> Void)? = nil) -> TLPhotosPickerViewController {
         let viewController = TLPhotosPickerViewController(withPHAssets: withPHAssets, didCancel: didCancel)
         var configure = TLPhotosPickerConfigure()
         let options = PHFetchOptions()
@@ -129,6 +129,7 @@ open class TLPhotosPickerViewController: UIViewController {
         configure.fetchOption = options
         configure.allowedVideo = true
         configure.numberOfColumn = 3
+        configure.maxSelectedAssets = 20
         configure.allowedLivePhotos = false
         configure.usedCameraButton = false
         configure.usedPrefetch = true
